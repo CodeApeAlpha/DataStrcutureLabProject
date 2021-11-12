@@ -7,26 +7,29 @@ import java.util.Scanner;
 
 public class GamePlay {
 
-    private String secretPhrase="all the world is a stage";
+    private FileReader fileReader=new FileReader();
+    private String secretPhrase;
+    private String category;
+
     private int numberOfOccurrence=0;
     private StringBuilder correctGuesses=new StringBuilder();
     private StringBuilder unfinishedGuess=new StringBuilder();
+    private CWP cwp;
 
     private String randomSentence ="A Glass Of Bourbon";
 
 
-    //    if a contestant guesses a letter that is part of the puzzle, the game should reveal all the
-    //    occurrences of that letter in the puzzle.
-
-    //    The number of occurrences of the letter would be  multiplied  by  that  cards  money
-    //    value  and  that  amount  would  be  added  to  the
-    //    contestants round total.
-
-    //    The contestant would still have his/her turn and he/she may
-    //    choose to spin again, buy a vowel, or solve the puzzle.
+    public void newRound(){
+        CWP cwp=fileReader.getCWP();
+        secretPhrase=cwp.getGuessPhrase().toLowerCase();
+        category= cwp.getCategory();
+    }
 
     public int letterGuesser(){
+//      Collecting file Data
+
 //      Validate userInput for guess
+
         StringBuilder guesses= new StringBuilder(userInputValidation());
         unfinishedGuess=new StringBuilder();
             for(char secretLetter:secretPhrase.toCharArray()){
@@ -62,6 +65,13 @@ public class GamePlay {
         return numberOfOccurrence;
     }
 
+    public Boolean phraseGuesser(String inputPhrase){
+        if(secretPhrase.equalsIgnoreCase(inputPhrase)){
+            return true;
+        }
+        return false;
+    }
+
     private boolean userInputLetterValidation(String userInput){
         return userInput.matches("^[a-zA-Z]*$") && userInput.length() == 1;
     }
@@ -95,6 +105,7 @@ public class GamePlay {
             }
         }
     }
+
     private boolean userOptionInputNumberValidation(String userOption){
         return userOption.matches("^[0-2]*$")&& userOption.length()==1;
     }

@@ -11,8 +11,7 @@ public class Queue {
         Rear=null;
     }
 
-    public void Enqueue(Player playerObject)
-    {
+    public void Enqueue(Player playerObject){
         Node temp = new Node(playerObject);
         if (temp != null)
         {
@@ -34,8 +33,7 @@ public class Queue {
         }
     }
 
-    public Player Dequeue()
-    {
+    public Player Dequeue(){
         Player dataToReturn = new Player();
         if(Front != null)
         {
@@ -52,8 +50,7 @@ public class Queue {
         return dataToReturn;
     }
 
-    public Player QueueFront()
-    {
+    public Player QueueFront(){
         if(Front == null)
         {
             System.out.println("The Queue is empty, cannot return value(s).");
@@ -65,8 +62,7 @@ public class Queue {
         }
     }
 
-    public int CountNodes()
-    {
+    public int CountNodes(){
         int count = 0;
         Queue tempQueue = new Queue(); //create temp queue
         while(Front != null) //while the original queue not empty
@@ -83,7 +79,6 @@ public class Queue {
         return count; // return the count
     }
 
-
     public Node getFront() {
         return Front;
     }
@@ -99,4 +94,6 @@ public class Queue {
     public void setRear(Node rear) {
         Rear = rear;
     }
+
+ 
 }
