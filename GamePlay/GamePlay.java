@@ -11,7 +11,7 @@ public class GamePlay {
     private String secretPhrase;
     private String category;
 
-    private int numberOfOccurrence=0;
+//    private int numberOfOccurrence=0;
     private StringBuilder correctGuesses=new StringBuilder();
     private StringBuilder unfinishedGuess=new StringBuilder();
     private CWP cwp;
@@ -29,7 +29,7 @@ public class GamePlay {
 //      Collecting file Data
 
 //      Validate userInput for guess
-
+        int numberOfOccurrence=0;
         StringBuilder guesses= new StringBuilder(userInputValidation());
         unfinishedGuess=new StringBuilder();
             for(char secretLetter:secretPhrase.toCharArray()){
@@ -64,6 +64,20 @@ public class GamePlay {
             }
         return numberOfOccurrence;
     }
+    public void buyVowel(){
+        char alphabet;
+        for(alphabet ='A'; alphabet < 'Z'; ++alphabet){
+            String string=String.valueOf(alphabet);
+            if(string.equalsIgnoreCase("A")||string.equalsIgnoreCase("I")||string.equals("O")||string.equals("U")){
+                if(secretPhrase.contains(string)){
+                    correctGuesses.append(string);
+                }
+            }
+        }
+
+
+    }
+
 
     public Boolean phraseGuesser(String inputPhrase){
         if(secretPhrase.equalsIgnoreCase(inputPhrase)){
@@ -114,4 +128,31 @@ public class GamePlay {
         return unfinishedGuess;
     }
 
+    public FileReader getFileReader() {
+        return fileReader;
+    }
+
+    public String getSecretPhrase() {
+        return secretPhrase;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+//    public int getNumberOfOccurrence() {
+//        return numberOfOccurrence;
+//    }
+
+    public StringBuilder getCorrectGuesses() {
+        return correctGuesses;
+    }
+
+    public CWP getCwp() {
+        return cwp;
+    }
+
+    public String getRandomSentence() {
+        return randomSentence;
+    }
 }
