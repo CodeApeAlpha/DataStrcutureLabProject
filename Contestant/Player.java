@@ -2,7 +2,7 @@ package DATASTRUCTURELAB_PROJECT.Contestant;
 
 public class Player {
 
-    private int playerNumber;
+    private int playerNumber=0;
     private String playerName;
     private int playerGrandTotal=0;
 
@@ -10,13 +10,13 @@ public class Player {
     }
 
     public Player(Player playerObject) {
-        this.playerNumber =playerObject.playerNumber;
+        this.playerNumber++;
         this.playerName = playerObject.playerName;
         this.playerGrandTotal =playerObject.playerGrandTotal;
     }
 
-    public Player(int playerNumber, String playerName) {
-        this.playerNumber = playerNumber;
+    public Player(int playerNumber,String playerName) {
+        this.playerNumber=playerNumber;
         this.playerName = playerName;
     }
 

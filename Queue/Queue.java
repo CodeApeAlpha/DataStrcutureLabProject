@@ -10,6 +10,10 @@ public class Queue {
         Front=null;
         Rear=null;
     }
+    public Queue(Queue data){
+        Front=data.Front;
+        Rear=data.Rear;
+    }
 
     public void Enqueue(Player playerObject){
         Node temp = new Node(playerObject);

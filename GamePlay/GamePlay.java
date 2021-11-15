@@ -23,6 +23,7 @@ public class GamePlay {
         CWP cwp=fileReader.getCWP();
         secretPhrase=cwp.getGuessPhrase().toLowerCase();
         category= cwp.getCategory();
+        correctGuesses=new StringBuilder();
     }
 
     public int letterGuesser(){
@@ -30,11 +31,13 @@ public class GamePlay {
 
 //      Validate userInput for guess
         int numberOfOccurrence=0;
-        StringBuilder guesses= new StringBuilder(userInputValidation());
+
+        StringBuilder guessesCollected= new StringBuilder(userInputValidation());
+        String userGuesses= guessesCollected.toString();
         unfinishedGuess=new StringBuilder();
             for(char secretLetter:secretPhrase.toCharArray()){
 //              Check if letter is within the phrase
-                if(!guesses.toString().toLowerCase().contains(String.valueOf(secretLetter))){
+                if(!guessesCollected.toString().toLowerCase().contains(String.valueOf(secretLetter))){
 //                  Print spaces
                     if(secretLetter==' '){
                         unfinishedGuess.append(secretLetter);
@@ -55,12 +58,15 @@ public class GamePlay {
 //                  Print letters found
                     unfinishedGuess.append(secretLetter);
                     System.out.print(secretLetter);
-                    if(!correctGuesses.toString().contains(String.valueOf(secretLetter))){
-//                      Adds new letters to collection of correct guess
-                        guesses=correctGuesses.append(guesses);
+                    if(userGuesses.equalsIgnoreCase(String.valueOf(secretLetter))){
                         numberOfOccurrence++;
                     }
+                    if(!correctGuesses.toString().contains(String.valueOf(secretLetter))){
+//                      Adds new letters to collection of correct guess
+                        guessesCollected=correctGuesses.append(guessesCollected.toString().toLowerCase());
+                    }
                 }
+//                System.out.println("Number "+numberOfOccurrence);
             }
         return numberOfOccurrence;
     }
@@ -69,13 +75,48 @@ public class GamePlay {
         for(alphabet ='A'; alphabet < 'Z'; ++alphabet){
             String string=String.valueOf(alphabet);
             if(string.equalsIgnoreCase("A")||string.equalsIgnoreCase("I")||string.equals("O")||string.equals("U")){
-                if(secretPhrase.contains(string)){
-                    correctGuesses.append(string);
+                if(secretPhrase.contains(string.toLowerCase()) && !correctGuesses.toString().contains(string.toLowerCase())){
+                    correctGuesses.append(string.toLowerCase());
+                    System.out.println("Vowel "+ string+" bought ");
+                    int numberOfOccurrence=0;
+                    StringBuilder guesses=  new StringBuilder();
+                    unfinishedGuess=new StringBuilder();
+                    for(char secretLetter:secretPhrase.toCharArray()){
+//              Check if letter is within the phrase
+                        if(!guesses.toString().toLowerCase().contains(String.valueOf(secretLetter))){
+//                  Print spaces
+                            if(secretLetter==' '){
+                                unfinishedGuess.append(secretLetter);
+                                System.out.print(secretLetter);
+                            }
+//                  Print letters from correctGuesses
+                            else if(correctGuesses.toString().contains(String.valueOf(secretLetter))){
+                                unfinishedGuess.append(secretLetter);
+                                System.out.print(secretLetter);
+                            }
+//                  Print * for wrong guess
+                            else{
+                                unfinishedGuess.append("*");
+                                System.out.print('*');
+                            }
+                        }
+                        else{
+//                  Print letters found
+                            unfinishedGuess.append(secretLetter);
+                            System.out.print(secretLetter);
+                            if(!correctGuesses.toString().contains(String.valueOf(secretLetter))){
+//                      Adds new letters to collection of correct guess
+                                guesses=correctGuesses.append(guesses);
+                            }
+
+                        }
+                    }
+                    return;
                 }
             }
+
         }
-
-
+        System.out.println(" Phrase Out Of New vowels");
     }
 
 
@@ -109,7 +150,7 @@ public class GamePlay {
     public String userOption(){
         String userOption;
         while(true){
-            System.out.println("\nUser Option\nSpin:0\tBuy-Vowel:1\tSolve:2");
+            System.out.println("\n\nUser Option\nSpin:0\tBuy-Vowel:1\nSolve:2\tGuess-Letter:3");
             userOption=new Scanner(System.in).next();
             if(!userOptionInputNumberValidation(userOption)){
                 System.out.println("Invalid option");
@@ -121,7 +162,7 @@ public class GamePlay {
     }
 
     private boolean userOptionInputNumberValidation(String userOption){
-        return userOption.matches("^[0-2]*$")&& userOption.length()==1;
+        return userOption.matches("^[0-3]*$")&& userOption.length()==1;
     }
 
     public StringBuilder getUnfinishedGuess() {
@@ -140,9 +181,9 @@ public class GamePlay {
         return category;
     }
 
-//    public int getNumberOfOccurrence() {
-//        return numberOfOccurrence;
-//    }
+    public void setUnfinishedGuess(StringBuilder unfinishedGuess) {
+        this.unfinishedGuess = unfinishedGuess;
+    }
 
     public StringBuilder getCorrectGuesses() {
         return correctGuesses;
