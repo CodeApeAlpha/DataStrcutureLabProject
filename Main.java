@@ -116,7 +116,11 @@ public class Main {
 //      Collect Player Guesses
         int numberOfOccurrence=gamePlay.letterGuesser();
 //      Queues Collected Guesses
-        collectedPhraseLetter.Enqueue(gamePlay.getUserGuesses());
+        if(collectedPhraseLetter.validate(gamePlay.getUserGuesses())){
+            collectedPhraseLetter.Enqueue(gamePlay.getUserGuesses());
+        }else {
+            numberOfOccurrence=0;
+        }
 //      Display Members of Queue
         collectedPhraseLetter.Display();
         while (numberOfOccurrence!=0){
@@ -216,8 +220,6 @@ public class Main {
                 playerToSolve=main.playerQueue.Dequeue();
                 main.gamePlay.newRound();
             }
-
-
 
         }
         System.out.println("\n\n\n\n\n\n\n\n----------------------------------------Overall Round Winner---------------------------------------------");

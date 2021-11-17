@@ -78,8 +78,32 @@ public class GuessesQueue {
             Enqueue(returnString);
             returnString=transfer.Dequeue();
         }
+    }
 
+    public boolean validate(String input){
 
+        boolean validation=true;
+
+        GuessesQueue tempStorage=new GuessesQueue();
+        String stringToCheck=Dequeue();
+
+        while (stringToCheck!=null){
+            if(!input.equalsIgnoreCase(stringToCheck)){
+                tempStorage.Enqueue(stringToCheck);
+            }else {
+                validation=false;
+            }
+            stringToCheck=Dequeue();
+        }
+
+        stringToCheck= tempStorage.Dequeue();
+
+        while (stringToCheck!=null){
+            Enqueue(stringToCheck);
+            stringToCheck= tempStorage.Dequeue();
+        }
+
+        return validation;
     }
 
     public StringNode getFront() {
