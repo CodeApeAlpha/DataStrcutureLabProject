@@ -3,8 +3,8 @@ package DATASTRUCTURELAB_PROJECT;
 import DATASTRUCTURELAB_PROJECT.CircularLinkedListWheel.Card;
 import DATASTRUCTURELAB_PROJECT.Contestant.Player;
 import DATASTRUCTURELAB_PROJECT.GamePlay.GamePlay;
-import DATASTRUCTURELAB_PROJECT.Queue.Node;
-import DATASTRUCTURELAB_PROJECT.Queue.Queue;
+import DATASTRUCTURELAB_PROJECT.Queue.String.GuessesQueue;
+import DATASTRUCTURELAB_PROJECT.Queue.Player.Queue;
 import DATASTRUCTURELAB_PROJECT.WHEEL.Wheel;
 
 
@@ -16,9 +16,8 @@ public class Main {
     private Queue playerQueueTemp =new Queue();
     private Queue playerQueue=new Queue();
 
-    private Queue winnerQueue=new Queue();
 
-
+    private GuessesQueue collectedPhraseLetter=new GuessesQueue();
 
 
     private  Wheel wheel= new Wheel();
@@ -76,20 +75,28 @@ public class Main {
 
     public boolean solvePuzzle(Player playerSolving){
         int roundTotal=0;
+//      Collect Player Guesses
         int numberOfOccurrence=gamePlay.letterGuesser();
+//      Queues Collected Guesses
+        collectedPhraseLetter.Enqueue(gamePlay.getUserGuesses());
+//      Display Members of Queue
+        collectedPhraseLetter.Display();
         while (numberOfOccurrence!=0){
             System.out.println("\nMoney on the board: Wheel Card Value:"+wheelSpinOutcome.getValueOfCard()+" * "+"NumberOfOccurrence:"+ numberOfOccurrence+" = "+ (roundTotal+=wheelSpinOutcome.getValueOfCard()*numberOfOccurrence));
             playerSolving.setPlayerGrandTotal(roundTotal+=playerSolving.getPlayerGrandTotal());
             System.out.println("Player "+playerSolving.getPlayerName() + " GrandTotal = GrandTotal+RoundTotal "+playerSolving.getPlayerGrandTotal());
             numberOfOccurrence=gamePlay.letterGuesser();
+            collectedPhraseLetter.Display();
+            collectedPhraseLetter.Enqueue(gamePlay.getUserGuesses());
             if(gamePlay.phraseGuesser(gamePlay.getUnfinishedGuess().toString())){
                 System.out.println("\n\nPlayer Won Their Turn");
-                winnerQueue.Enqueue(playerSolving);
-                return false ;
+//              Rest List
+                collectedPhraseLetter=new GuessesQueue();
+                return true ;
             }
         }
-        System.out.println("\nPlayer "+playerSolving.getPlayerName()+ " lost turn");
-        return true;
+        System.out.println("\n\n\nPlayer "+playerSolving.getPlayerName()+ " lost turn");
+        return false;
 
     }
 
@@ -97,6 +104,7 @@ public class Main {
         System.out.println("\nList Of Player Results");
         int max=0;
         Player roundWinner=null;
+//      Depose payer from List
         Player player= playerQueueTemp.Dequeue();
         while(player.getPlayerName()!=null){
             System.out.println("\tPlayer Data: "+player.getPlayerNumber()+" "+player.getPlayerName()+" "+player.getPlayerGrandTotal());
@@ -108,56 +116,60 @@ public class Main {
         }
         if(roundWinner!=null){
             System.out.println("Winner Player Data: ID "+roundWinner.getPlayerNumber()+" Name "+roundWinner.getPlayerName()+" Points "+roundWinner.getPlayerGrandTotal());
-            winnerQueue.Enqueue(roundWinner);
-
         }else {
             System.out.println("No Winner Was Determined");
         }
-
     }
     public static void main(String[] args) {
 
-        Boolean findWinner=true;
+        Boolean findWinner=false;
         int rounds=0;
         Main main=new Main();
+
+//      Collect Player Data
         main.PlayerDataFunction();
-
+//      Depose Player From Queue
         Player playerToSolve= main.playerQueue.Dequeue();
+//      Load New File Data For Players
         main.gamePlay.newRound();
+//      Act As A 3 Round Loop
         while (rounds!=3){
-            System.out.println("-------------------------New Phrase Loaded-----------------------");
-            System.out.println("-------------------------Categories-----------------------");
-            System.out.println("-------------------------"+main.gamePlay.getCategory());
-            while (playerToSolve.getPlayerName()!=null){
-                if(main.wheelSpinValidation(playerToSolve)){
-                    findWinner=main.solvePuzzle(playerToSolve);
-                }
-                if(!findWinner){
-                    System.out.println("-------------------------New Phrase Loaded-----------------------");
-                    System.out.println("-------------------------Categories-----------------------");
-                    System.out.println("-------------------------"+main.gamePlay.getCategory());
-                    main.gamePlay.newRound();
-                }
-                main.playerQueueTemp.Enqueue(playerToSolve);
-                playerToSolve=main.playerQueue.Dequeue();
-        }
-//      Player reload of Queue
-            main.playerQueue= new Queue(main.playerQueueTemp);
-//      Find winner
-            if (findWinner){
-                main.roundWinner();
-                main.gamePlay.newRound();
 
-            }
-//            main.playerQueueTemp=main.playerQueue;
-            playerToSolve=main.playerQueue.Dequeue();
-
-            rounds++;
             if(rounds!=3){
                 System.out.println("\n\n\n\n\n\n\n\n----------------------------------------New Round---------------------------------------------");
-                System.out.println("\n\n\n\n\n\n\n\n----------------------------------------"+rounds);
-
+                System.out.println("\n----------------------------------------Round--->"+(rounds+1));
             }
+//          Acts A Loop For Player Each Player
+            while (playerToSolve.getPlayerName()!=null){
+//              Validate Spin From Wheel
+                if(main.wheelSpinValidation(playerToSolve)){
+//                  Act A Player Main Screen
+                    System.out.println("\n-------------------------New Phrase Loaded-----------------------");
+                    System.out.println("-------------------------Categories-----------------------");
+                    System.out.println("-------------------------"+main.gamePlay.getCategory());
+//                  Player At
+                    findWinner=main.solvePuzzle(playerToSolve);
+                }
+//              Add Player In New Queue
+                main.playerQueueTemp.Enqueue(playerToSolve);
+//              Depose Player From Queue
+                playerToSolve=main.playerQueue.Dequeue();
+            }
+//          Player reload To Queue For Loop
+            main.playerQueue= new Queue(main.playerQueueTemp);
+//          Find Determine Round Winner
+            if (!findWinner){
+                main.roundWinner();
+            }
+            rounds++;
+            if(rounds==3){
+                main.playerQueueTemp=new Queue(main.getPlayerQueue());
+            }else{
+                playerToSolve=main.playerQueue.Dequeue();
+                main.gamePlay.newRound();
+            }
+
+
 
         }
 

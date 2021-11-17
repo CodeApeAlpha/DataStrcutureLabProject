@@ -1,4 +1,4 @@
-package DATASTRUCTURELAB_PROJECT.Queue;
+package DATASTRUCTURELAB_PROJECT.Queue.Player;
 import DATASTRUCTURELAB_PROJECT.Contestant.Player;
 
 public class Queue {

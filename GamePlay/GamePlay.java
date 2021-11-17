@@ -10,6 +10,7 @@ public class GamePlay {
     private FileReader fileReader=new FileReader();
     private String secretPhrase;
     private String category;
+    private String userGuesses;
 
 //    private int numberOfOccurrence=0;
     private StringBuilder correctGuesses=new StringBuilder();
@@ -33,7 +34,7 @@ public class GamePlay {
         int numberOfOccurrence=0;
 
         StringBuilder guessesCollected= new StringBuilder(userInputValidation());
-        String userGuesses= guessesCollected.toString();
+        userGuesses= guessesCollected.toString();
         unfinishedGuess=new StringBuilder();
             for(char secretLetter:secretPhrase.toCharArray()){
 //              Check if letter is within the phrase
@@ -195,5 +196,9 @@ public class GamePlay {
 
     public String getRandomSentence() {
         return randomSentence;
+    }
+
+    public String getUserGuesses() {
+        return userGuesses;
     }
 }
