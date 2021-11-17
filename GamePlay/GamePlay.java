@@ -17,6 +17,7 @@ public class GamePlay {
     private StringBuilder unfinishedGuess=new StringBuilder();
     private CWP cwp;
 
+    private int globalCount;
     private String randomSentence ="A Glass Of Bourbon";
 
 
@@ -69,6 +70,7 @@ public class GamePlay {
                 }
 //                System.out.println("Number "+numberOfOccurrence);
             }
+            globalCount=numberOfOccurrence;
         return numberOfOccurrence;
     }
     public void buyVowel(){
@@ -164,6 +166,10 @@ public class GamePlay {
 
     private boolean userOptionInputNumberValidation(String userOption){
         return userOption.matches("^[0-3]*$")&& userOption.length()==1;
+    }
+
+    public int getGlobalCount() {
+        return globalCount;
     }
 
     public StringBuilder getUnfinishedGuess() {

@@ -49,7 +49,7 @@ public class Main {
 
 
     }
-
+//  Spin Wheel
     public boolean wheelSpinValidation(Player playerData){
         wheelSpinOutcome=wheel.spin();
         if(playerData.getPlayerName()!=null){
@@ -66,15 +66,53 @@ public class Main {
             }else{
                 return true;
             }
-        }else{
+        }
+        else{
             System.out.println("End Of Player Queue");
         }
         return false;
 
     }
 
+//  Display User
+    public boolean moreOptions(Player playerData){
+
+//  User Option
+//  Spin:0	Buy-Vowel:1
+//  Solve:2	Guess-Letter:3
+        String option= gamePlay.userOption();
+        boolean continued=false;
+        if(option.equals("0")){
+            continued=wheelSpinValidation(playerData);
+            if(!continued){
+                return false;
+            }
+        }else if(option.equals("1")){
+            gamePlay.buyVowel();
+
+        }else if(option.equals("2")){
+//            Solve phrase
+            System.out.println("Enter your phrase");
+            String guessedPhrase =new Scanner(System.in).next();
+//          Validates
+            if(gamePlay.getSecretPhrase().equalsIgnoreCase(guessedPhrase)){
+                StringBuilder guessedPh=new StringBuilder();
+                guessedPh.append(guessedPhrase);
+                gamePlay.setUnfinishedGuess(guessedPh);
+                return true;
+            }else{
+                return false;
+            }
+
+        }else if(option.equals("3")){
+            return solvePuzzle(playerData);
+        }
+        return true;
+    }
+//  Solve Puzzle
     public boolean solvePuzzle(Player playerSolving){
         int roundTotal=0;
+        boolean firstSpin=true;
 //      Collect Player Guesses
         int numberOfOccurrence=gamePlay.letterGuesser();
 //      Queues Collected Guesses
@@ -82,10 +120,17 @@ public class Main {
 //      Display Members of Queue
         collectedPhraseLetter.Display();
         while (numberOfOccurrence!=0){
-            System.out.println("\nMoney on the board: Wheel Card Value:"+wheelSpinOutcome.getValueOfCard()+" * "+"NumberOfOccurrence:"+ numberOfOccurrence+" = "+ (roundTotal+=wheelSpinOutcome.getValueOfCard()*numberOfOccurrence));
-            playerSolving.setPlayerGrandTotal(roundTotal+=playerSolving.getPlayerGrandTotal());
-            System.out.println("Player "+playerSolving.getPlayerName() + " GrandTotal = GrandTotal+RoundTotal "+playerSolving.getPlayerGrandTotal());
+            if(firstSpin){
+                System.out.println("\nMoney on the board: Wheel Card Value:"+wheelSpinOutcome.getValueOfCard()+" * "+"NumberOfOccurrence:"+ numberOfOccurrence+" = "+ (roundTotal+=wheelSpinOutcome.getValueOfCard()*numberOfOccurrence));
+                playerSolving.setPlayerGrandTotal(roundTotal+=playerSolving.getPlayerGrandTotal());
+                System.out.println("Player "+playerSolving.getPlayerName() + " GrandTotal = GrandTotal+RoundTotal "+playerSolving.getPlayerGrandTotal());
+            }
+            if(!moreOptions(playerSolving)){
+                return false;
+            }
+            
             numberOfOccurrence=gamePlay.letterGuesser();
+
             collectedPhraseLetter.Display();
             collectedPhraseLetter.Enqueue(gamePlay.getUserGuesses());
             if(gamePlay.phraseGuesser(gamePlay.getUnfinishedGuess().toString())){
@@ -94,12 +139,13 @@ public class Main {
                 collectedPhraseLetter=new GuessesQueue();
                 return true ;
             }
+            firstSpin=false;
         }
         System.out.println("\n\n\nPlayer "+playerSolving.getPlayerName()+ " lost turn");
         return false;
 
     }
-
+//  Display Winner
     public void roundWinner(){
         System.out.println("\nList Of Player Results");
         int max=0;
@@ -120,6 +166,7 @@ public class Main {
             System.out.println("No Winner Was Determined");
         }
     }
+
     public static void main(String[] args) {
 
         Boolean findWinner=false;
@@ -155,6 +202,7 @@ public class Main {
 //              Depose Player From Queue
                 playerToSolve=main.playerQueue.Dequeue();
             }
+            main.collectedPhraseLetter=new GuessesQueue();
 //          Player reload To Queue For Loop
             main.playerQueue= new Queue(main.playerQueueTemp);
 //          Find Determine Round Winner
@@ -172,7 +220,6 @@ public class Main {
 
 
         }
-
         System.out.println("\n\n\n\n\n\n\n\n----------------------------------------Overall Round Winner---------------------------------------------");
         main.roundWinner();
 
